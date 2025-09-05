@@ -37,4 +37,3 @@ jobs:
         port: ${{ secrets.FTP_PORT }}
         local-dir: dist/ # Vite builds to 'dist' folder
         server-dir: /   # Your target directory on cPanel
-        dangerous-clean-slate: true
