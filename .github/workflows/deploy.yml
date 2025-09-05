@@ -3,7 +3,7 @@ name: Build and Deploy Django to cPanel via FTP
 on:
   push:
     branches:
-      - main
+      - main   # Runs only when you push to main branch
 
 jobs:
   build-deploy:
@@ -28,6 +28,12 @@ jobs:
         python manage.py migrate --noinput
         python manage.py collectstatic --noinput
 
+    - name: Prepare build folder
+      run: |
+        mkdir build
+        cp -r portfolio main manage.py requirements.txt build/
+        cp -r staticfiles build/
+
     - name: Deploy via FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
@@ -35,5 +41,6 @@ jobs:
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
         port: ${{ secrets.FTP_PORT }}
-        local-dir: build/ # Vite builds to 'dist' folder
-        server-dir: /   # Your target directory on cPanel
+        local-dir: build/
+        server-dir: / # change to your actual cPanel path
+        dangerous-clean-slate: true
